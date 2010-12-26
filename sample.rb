@@ -3,11 +3,11 @@
 
 require 'nico'
 
-# ƒjƒRƒjƒR“®‰æ‚ÉƒƒOƒCƒ“
+# ãƒ‹ã‚³ãƒ‹ã‚³å‹•ç”»ã«ãƒ­ã‚°ã‚¤ãƒ³
 
 nv = Nicovideo.login("hosakanpo@gmx.net", "hosanoterrorism")
 
-# “®‰æ‚ÆƒTƒ€ƒlƒCƒ‹‚ğƒ_ƒEƒ“ƒ[ƒh
+# å‹•ç”»ã¨ã‚µãƒ ãƒã‚¤ãƒ«ã‚’ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰
 
 video_id = "sm9"
 output_thumb_name = "thumb.jpg"
@@ -27,9 +27,9 @@ nv.watch(video_id) {|video|
   }
 }
 
-# ‚ ‚éƒ}ƒCƒŠƒXƒg‚Ì‚¤‚¿
-# ƒ}ƒCƒŠƒXƒgƒRƒƒ“ƒg‚ª"comment"‚Å‚ ‚é“®‰æ‚ğ
-# •Ê‚Ìƒ}ƒCƒŠƒXƒg‚ÉˆÚ“®
+# ã‚ã‚‹ãƒã‚¤ãƒªã‚¹ãƒˆã®ã†ã¡
+# ãƒã‚¤ãƒªã‚¹ãƒˆã‚³ãƒ¡ãƒ³ãƒˆãŒ"comment"ã§ã‚ã‚‹å‹•ç”»ã‚’
+# åˆ¥ã®ãƒã‚¤ãƒªã‚¹ãƒˆã«ç§»å‹•
 
 from_mylist_id = "22811153"
 to_mylist_id = "22811190"
