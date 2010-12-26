@@ -5,7 +5,7 @@ require 'nico'
 
 # ニコニコ動画にログイン
 
-nv = Nicovideo.login("hosakanpo@gmx.net", "hosanoterrorism")
+nv = Nicovideo.login("YOUR_MAIL", "YOUR_PASSWORD")
 
 # 動画とサムネイルをダウンロード
 
@@ -31,8 +31,8 @@ nv.watch(video_id) {|video|
 # マイリストコメントが"comment"である動画を
 # 別のマイリストに移動
 
-from_mylist_id = "22811153"
-to_mylist_id = "22811190"
+from_mylist_id = "FROM_MYLIST_ID"
+to_mylist_id = "TO_MYLIST_ID"
 
 nv.mylist(from_mylist_id) {|mylist|
   item_ids = []
