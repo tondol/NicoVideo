@@ -106,7 +106,7 @@ module Nicovideo
         request = MYLIST_PATH
         response = w.get(request, 'Cookie' => @session)
         body = response.body.force_encoding("utf-8")
-        @token = $1 if body =~ /NicoAPI.token = "([0-9a-f-]+)"/;
+        @token = $1 if body =~ /NicoAPI\.token = "([0-9a-f-]+)"/;
       }
       
       # return token
