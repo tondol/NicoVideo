@@ -16,7 +16,7 @@ module Nicovideo
       @token     = nil
     end
     
-    attr_reader :mylist_id, :url, :feed_url
+    attr_reader :mylist_id
     
     ####################################
     # api
