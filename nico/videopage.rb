@@ -6,6 +6,15 @@
 
 module Nicovideo
   class Videopage
+
+    EXT_HOST   = 'ext.nicovideo.jp'
+    FLAPI_HOST = 'flapi.nicovideo.jp'
+    
+    GETFLV_PATH       = '/api/getflv/'
+    GETFLV_QUERY      = '?as3=1'
+    GETTHUMBINFO_PATH = '/api/getthumbinfo/'
+    BUFFER_SIZE       = 1024*1024
+    
     def initialize(session, video_id)
       @video_id = video_id
       @session  = session
@@ -30,9 +39,9 @@ module Nicovideo
       get_thumb.elements['description'].text
     end
     
-    def published_at
+    def first_retrieve
       date = get_thumb.elements['first_retrieve'].text
-      Time.parse(date)
+      Time.iso8601(date).getlocal
     end
     
     def length
@@ -61,14 +70,14 @@ module Nicovideo
         next if elem.attributes['domain'] != 'jp'
         elem.elements.each('tag') {|tag| tags << tag.text }
       }
+      # return tags
       tags
     end
     
     def type
       params = get_params
       video_uri = URI.decode(params['url'])
-      pattern = %r!^http://.*\.nicovideo\.jp/smile\?(.*?)=.*$!
-      video_uri =~ pattern
+      video_uri =~ %r!^http://.*\.nicovideo\.jp/smile\?(.*)=.*$!
       case $1
       when 'm'
         "mp4"
@@ -189,9 +198,9 @@ module Nicovideo
         response = w.get(request, 'Cookie' => @session)
         document = REXML::Document.new(response.body)
         # raise exception
-        status = document.elements['nicovideo_thumb_response'].attributes['status']
-        raise VideoNotFoundError.new if status != "ok"
-        @thumb = document.elements['nicovideo_thumb_response/thumb']
+        thumb_response = document.elements['nicovideo_thumb_response']
+        raise VideoNotFoundError.new if thumb_response.attributes['status'] != "ok"
+        @thumb = thumb_response.elements['thumb']
       }
     end
   end

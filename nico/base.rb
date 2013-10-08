@@ -7,16 +7,9 @@
 module Nicovideo
   
   # constant values
-  BASE_URL    = 'http://www.nicovideo.jp'
-  BASE_HOST   = 'www.nicovideo.jp'
-  EXT_HOST    = 'ext.nicovideo.jp'
-  FLAPI_HOST  = 'flapi.nicovideo.jp'
-  WATCH_PATH  = '/watch/'
-  
-  GETFLV_PATH       = '/api/getflv/'
-  GETFLV_QUERY      = '?as3=1'
-  GETTHUMBINFO_PATH = '/api/getthumbinfo/'
-  BUFFER_SIZE       = 1024*1024
+  BASE_URL   = 'http://www.nicovideo.jp'
+  BASE_HOST  = 'www.nicovideo.jp'
+  WATCH_PATH = '/watch/'
   
   # proxy configuration
   PROXY_HOST = nil
@@ -92,6 +85,12 @@ module Nicovideo
       deflist = Deflist.new(@session)
       yield deflist if block_given?
       deflist
+    end
+
+    def channel(channel_id)
+      channel = Channel.new(@session, channel_id)
+      yield channel if block_given?
+      channel
     end
   end
   
