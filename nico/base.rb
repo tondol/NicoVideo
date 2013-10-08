@@ -52,9 +52,10 @@ module Nicovideo
         
         https = Net::HTTP::Proxy(PROXY_HOST, PROXY_PORT).new(LOGIN_HOST, 443)
         https.use_ssl = true
+        https.ssl_version = :SSLv3
         https.verify_mode = OpenSSL::SSL::VERIFY_NONE
         https.start {|w|
-          body = "mail=#{@mail}&password=#{@password}"
+          body = "mail_tel=#{@mail}&password=#{@password}"
           response = w.post(LOGIN_PATH, body)
           response['Set-Cookie'] =~ /(user_session=user_session[0-9_]+)/
           @session = $1 || nil

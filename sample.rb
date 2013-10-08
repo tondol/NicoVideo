@@ -1,19 +1,26 @@
 #!/usr/local/bin/ruby
 # -*- coding: utf-8 -*-
 
-require 'nico'
+require 'yaml'
 
-# ニコニコ動画にログイン
+require_relative 'nico'
 
-nv = Nicovideo.login("YOUR_MAIL", "YOUR_PASSWORD")
+# 設定ファイルを読み込む
+# config.ymlは予めconfig.yml.sampleを参考に作成する必要がある
 
-# 動画とサムネイルをダウンロード
+config = YAML.load_file('config.yml')
 
-video_id = "sm9"
+# Nicovideoにログインする
+# mailとpasswordは設定ファイルのものが使われる
+
+nv = Nicovideo.login(config["mail"], config["password"])
+
+# video_idの動画とそのサムネイルをダウンロードする
+
 output_thumb_name = "thumb.jpg"
 output_video_name_without_ext = "video"
 
-nv.watch(video_id) {|video|
+nv.watch(config["video_id"]) {|video|
   puts video.title
   puts video.description
   output_video_name = output_video_name_without_ext + "." + video.type
@@ -27,14 +34,11 @@ nv.watch(video_id) {|video|
   }
 }
 
-# あるマイリストのうち
+# from_mylist_idのマイリストのうち、
 # マイリストコメントが"comment"である動画を
-# 別のマイリストに移動
+# to_mylist_idのマイリストに移動する
 
-from_mylist_id = "FROM_MYLIST_ID"
-to_mylist_id = "TO_MYLIST_ID"
-
-nv.mylist(from_mylist_id) {|mylist|
+nv.mylist(config["from_mylist_id"]) {|mylist|
   item_ids = []
   mylist.list['mylistitem'].each {|item|
     if item['description'] == "comment" then
@@ -42,6 +46,6 @@ nv.mylist(from_mylist_id) {|mylist|
     end
   }
   unless item_ids.empty? then
-    mylist.move(to_mylist_id, item_ids)
+    mylist.move(config["to_mylist_id"], item_ids)
   end
 }
