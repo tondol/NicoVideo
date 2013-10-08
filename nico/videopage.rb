@@ -85,8 +85,7 @@ module Nicovideo
     
     def video
       params = get_params
-      video_uri = URI.decode(params['url'])
-      uri = URI.parse(video_uri)
+      uri = URI.parse(URI.decode(params['url']))
       
       http = Net::HTTP::Proxy(PROXY_HOST, PROXY_PORT)
       http.start(uri.host, uri.port) {|w|
@@ -139,8 +138,7 @@ module Nicovideo
     
     def comments(num=500)
       params = get_params
-      comments_uri = URI.decode(params['ms'])
-      uri = URI.parse(comments_uri)
+      uri = URI.parse(URI.decode(params['ms']))
       
       http = Net::HTTP::Proxy(PROXY_HOST, PROXY_PORT)
       http.start(uri.host, uri.port) {|w|
@@ -176,6 +174,7 @@ module Nicovideo
         hash = Hash[*array.flatten]
         # raise exception
         raise AccessLockedError.new if hash['error']
+        raise UnavailableVideoError.new if hash['url'].empty?
         @params = hash
       }
     end

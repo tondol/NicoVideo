@@ -23,9 +23,10 @@ module Nicovideo
   PROXY_PORT = 3128
   
   # error classes
-  class AuthenticationError < StandardError; end
-  class VideoNotFoundError  < StandardError; end
-  class AccessLockedError   < StandardError; end
+  class AuthenticationError   < StandardError; end
+  class VideoNotFoundError    < StandardError; end
+  class AccessLockedError     < StandardError; end
+  class UnavailableVideoError < StandardError; end
   
   class Base
     
