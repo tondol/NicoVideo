@@ -9,7 +9,7 @@ module Nicovideo
     
     CHANNEL_HOST         = 'ch.nicovideo.jp'
     CHANNEL_PATH_PREFIX  = '/'
-    CHANNEL_PATH_POSTIFX = '/video?rss=2.0'
+    CHANNEL_PATH_POSTFIX = '/video?rss=2.0'
     
     def initialize(session, channel_id)
       @session    = session
