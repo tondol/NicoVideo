@@ -28,7 +28,7 @@ module Nicovideo
     attr_reader :video_id, :url
     
     ####################################
-    # thumb infomations
+    # thumb infomation
     ####################################
     
     def title

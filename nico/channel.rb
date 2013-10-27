@@ -5,6 +5,34 @@
 ####################################
 
 module Nicovideo
+  class ChannelItem
+    def initialize(item)
+      @rss = item
+    end
+
+    ####################################
+    # item information
+    ####################################
+
+    def title
+      @rss.elements['title'].text
+    end
+
+    def link
+      @rss.elements['link'].text
+    end
+
+    def pub_date
+      date = @rss.elements['pubDate'].text
+      Time.rfc2822(date).getlocal
+    end
+
+    def video_id
+      link =~ %r!^http://.*\.nicovideo\.jp/watch/(.*)$!
+      $1
+    end
+  end
+
   class Channel
     
     CHANNEL_HOST         = 'ch.nicovideo.jp'
@@ -20,7 +48,7 @@ module Nicovideo
     attr_reader :channel_id
     
     ####################################
-    # channel informations
+    # channel information
     ####################################
 
     def creator
@@ -35,11 +63,9 @@ module Nicovideo
     def items
       items = []
       get_channel.elements.each('item') {|item|
-        link = item.elements['link'].text
-        link =~ %r!^http://.*\.nicovideo\.jp/watch/(.*)$!
-        items << Videopage.new(@session, $1)
+        items << ChannelItem.new(item)
       }
-      # return videos
+      # return items
       items
     end
     
