@@ -51,7 +51,7 @@ module Nicovideo
         https.start {|w|
           body = "mail_tel=#{@mail}&password=#{@password}"
           response = w.post(LOGIN_PATH, body)
-          response['Set-Cookie'] =~ /(user_session=user_session[0-9_]+)/
+          response['Set-Cookie'] =~ /(user_session=user_session_\w+)/
           @session = $1 || nil
         }
         @logged_in = true

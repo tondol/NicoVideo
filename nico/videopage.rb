@@ -11,7 +11,6 @@ module Nicovideo
     FLAPI_HOST = 'flapi.nicovideo.jp'
     
     GETFLV_PATH       = '/api/getflv/'
-    GETFLV_QUERY      = '?as3=1'
     GETTHUMBINFO_PATH = '/api/getthumbinfo/'
     BUFFER_SIZE       = 1024*1024
     
@@ -177,13 +176,13 @@ module Nicovideo
       }
       
       http.start(FLAPI_HOST, 80) {|w|
-        request = GETFLV_PATH + @video_id + GETFLV_QUERY
+        request = GETFLV_PATH + @video_id
         response = w.get(request, 'Cookie' => @session)
         array = response.body.split(/&/).map {|e| e.split(/=/, 2) }
         hash = Hash[*array.flatten]
         # raise exception
         raise AccessLockedError.new if hash['error']
-        raise UnavailableVideoError.new if hash['url'].empty?
+        raise UnavailableVideoError.new if hash['closed']
         @params = hash
       }
     end
