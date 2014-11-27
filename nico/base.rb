@@ -46,7 +46,7 @@ module Nicovideo
         
         https = Net::HTTP::Proxy(PROXY_HOST, PROXY_PORT).new(LOGIN_HOST, 443)
         https.use_ssl = true
-        https.ssl_version = :SSLv3
+        https.ssl_version = :TLSv1
         https.verify_mode = OpenSSL::SSL::VERIFY_NONE
         https.start {|w|
           body = "mail_tel=#{@mail}&password=#{@password}"
