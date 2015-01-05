@@ -39,11 +39,10 @@ module Nicovideo
     end
     
     def login(mail=nil, password=nil, session=nil)
-      unless logged_in?
-        @mail     ||= mail
-        @password ||= password
-        @session  ||= session
-        
+      @mail     ||= mail
+      @password ||= password
+      @session  ||= session
+      unless logged_in?  
         https = Net::HTTP::Proxy(PROXY_HOST, PROXY_PORT).new(LOGIN_HOST, 443)
         https.use_ssl = true
         https.ssl_version = :TLSv1
