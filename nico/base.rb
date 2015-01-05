@@ -30,19 +30,19 @@ module Nicovideo
     # login operations
     ####################################
     
-    def initialize(mail=nil, password=nil)
+    def initialize(mail=nil, password=nil, session=nil)
       @mail      = mail
       @password  = password
-      @session   = nil
+      @session   = session
       @videopage = nil
-      @logged_in = false
       self
     end
     
-    def login(mail=nil, password=nil)
+    def login(mail=nil, password=nil, session=nil)
       unless logged_in?
         @mail     ||= mail
         @password ||= password
+        @session  ||= session
         
         https = Net::HTTP::Proxy(PROXY_HOST, PROXY_PORT).new(LOGIN_HOST, 443)
         https.use_ssl = true
@@ -54,15 +54,19 @@ module Nicovideo
           response['Set-Cookie'] =~ /(user_session=user_session_\w+)/
           @session = $1 || nil
         }
-        @logged_in = true
       end
       # raise exception
       raise AuthenticationError.new unless @session
       self
     end
-    
+
     def logged_in?()
-      @logged_in
+      return false unless @session
+      http = Net::HTTP::Proxy(PROXY_HOST, PROXY_PORT).new(BASE_HOST)
+      http.start {|w|
+        response = w.head("/", 'Cookie' => @session)
+        response['x-niconico-authflag'].to_i != 0
+      }
     end
     
     ####################################
