@@ -101,11 +101,11 @@ module Nicovideo
   # dummy operations
   ####################################
   
-  def Nicovideo.new(mail, password)
-    Base.new(mail, password)
+  def Nicovideo.new(mail, password, session=nil)
+    Base.new(mail, password, session)
   end
   
-  def Nicovideo.login(mail, password)
-    Base.new(mail, password).login
+  def Nicovideo.login(mail, password, session=nil)
+    Base.new(mail, password, session).login
   end
 end
