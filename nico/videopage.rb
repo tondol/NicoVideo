@@ -92,56 +92,42 @@ module Nicovideo
     ####################################
     
     def video
+      response = String.new
+      video_with_block {|data|
+        response << data
+        yield data if block_given?
+      }
+      response
+    end
+
+    def video_with_block
       params = get_params
       uri = URI.parse(URI.decode(params['url']))
       
       http = Net::HTTP::Proxy(PROXY_HOST, PROXY_PORT)
       http.start(uri.host, uri.port) {|w|
         cookie = "#{@session};#{@history}"
-        buffer = String.new
-        response = String.new
-        # streaming download with buffer
+        # streaming download
         w.get(uri.request_uri, 'Cookie' => cookie) {|data|
-          buffer << data
-          response << data
-          if buffer.size > BUFFER_SIZE then
-            yield buffer.slice(0 ... BUFFER_SIZE) if block_given?
-            buffer = buffer.slice(BUFFER_SIZE ... buffer.size)
-          end
+          yield data if block_given?
         }
-        # remain buffer
-        unless buffer.empty?
-          yield buffer if block_given?
-        end
-        # return body
-        response
       }
     end
-    
+
     def thumbnail
       thumbnail_uri = get_thumb.elements['thumbnail_url'].text
       uri = URI.parse(thumbnail_uri)
       
       http = Net::HTTP::Proxy(PROXY_HOST, PROXY_PORT)
       http.start(uri.host, uri.port) {|w|
-        buffer = String.new
         response = String.new
-        # streaming download with buffer
+        # streaming download
         w.get(uri.request_uri, 'Cookie' => @session) {|data|
-          buffer << data
           response << data
-          if buffer.size > BUFFER_SIZE then
-            yield buffer.slice(0 ... BUFFER_SIZE) if block_given?
-            buffer = buffer.slice(BUFFER_SIZE ... buffer.size)
-          end
+          yield data if block_given?
         }
-        # remain buffer
-        unless buffer.empty?
-          yield buffer if block_given?
-        end
-        # return body
         response
-	    }
+      }
     end
     
     def comments(num=500)
