@@ -108,7 +108,7 @@ module Nicovideo
       http.start(url.host, url.port) {|w|
         cookie = "#{@session};#{@history}"
         # streaming download
-        w.get(url.request_url, 'Cookie' => cookie) {|data|
+        w.get(url.request_uri, 'Cookie' => cookie) {|data|
           yield data if block_given?
         }
       }
@@ -122,7 +122,7 @@ module Nicovideo
       http.start(url.host, url.port) {|w|
         response = String.new
         # streaming download
-        w.get(url.request_url, 'Cookie' => @session) {|data|
+        w.get(url.request_uri, 'Cookie' => @session) {|data|
           response << data
           yield data if block_given?
         }
@@ -139,7 +139,7 @@ module Nicovideo
         cookie = "#{@session};#{@history}"
         thread_id = params['thread_id']
         body = %!<thread res_from="-#{num}" version="20061206" thread="#{thread_id}" />!
-        response = w.post(url.request_url, body, 'Cookie' => cookie)
+        response = w.post(url.request_uri, body, 'Cookie' => cookie)
         response.body
       }
     end
