@@ -75,8 +75,8 @@ module Nicovideo
     
     def type
       params = get_params
-      video_uri = URI.decode(params['url'])
-      video_uri =~ %r!^http://.*\.nicovideo\.jp/smile\?(.*)=.*$!
+      video_url = URI.decode(params['url'])
+      video_url =~ %r!^http://.*\.nicovideo\.jp/smile\?(.*)=.*$!
       case $1
       when 'm'
         "mp4"
@@ -102,27 +102,27 @@ module Nicovideo
 
     def video_with_block
       params = get_params
-      uri = URI.parse(URI.decode(params['url']))
+      url = URI.parse(URI.decode(params['url']))
       
       http = Net::HTTP::Proxy(PROXY_HOST, PROXY_PORT)
-      http.start(uri.host, uri.port) {|w|
+      http.start(url.host, url.port) {|w|
         cookie = "#{@session};#{@history}"
         # streaming download
-        w.get(uri.request_uri, 'Cookie' => cookie) {|data|
+        w.get(url.request_url, 'Cookie' => cookie) {|data|
           yield data if block_given?
         }
       }
     end
 
     def thumbnail
-      thumbnail_uri = get_thumb.elements['thumbnail_url'].text
-      uri = URI.parse(thumbnail_uri)
+      thumbnail_url = get_thumb.elements['thumbnail_url'].text
+      url = URI.parse(thumbnail_url)
       
       http = Net::HTTP::Proxy(PROXY_HOST, PROXY_PORT)
-      http.start(uri.host, uri.port) {|w|
+      http.start(url.host, url.port) {|w|
         response = String.new
         # streaming download
-        w.get(uri.request_uri, 'Cookie' => @session) {|data|
+        w.get(url.request_url, 'Cookie' => @session) {|data|
           response << data
           yield data if block_given?
         }
@@ -132,14 +132,14 @@ module Nicovideo
     
     def comments(num=500)
       params = get_params
-      uri = URI.parse(URI.decode(params['ms']))
+      url = URI.parse(URI.decode(params['ms']))
       
       http = Net::HTTP::Proxy(PROXY_HOST, PROXY_PORT)
-      http.start(uri.host, uri.port) {|w|
+      http.start(url.host, url.port) {|w|
         cookie = "#{@session};#{@history}"
         thread_id = params['thread_id']
         body = %!<thread res_from="-#{num}" version="20061206" thread="#{thread_id}" />!
-        response = w.post(uri.request_uri, body, 'Cookie' => cookie)
+        response = w.post(url.request_url, body, 'Cookie' => cookie)
         response.body
       }
     end
